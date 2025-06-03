@@ -1,0 +1,156 @@
+Context:
+
+{Observable: what object will be seen in the system if the safeguard is enforced or not enforced
+
+Class: Checklist or verifiable or Measurable (A safeguard can belong to multiple classes). A checklist class means we can assess the safeguard through scripting, A verifiable class means we can verify the safeguard by checking system configuration, and A measurable class means we have to use data-driven analytics to assess the safeguard. You must also give the explanation for why you think a safeguard belongs to the detected class.
+
+Evaluation_Method: Data-driven or  Model-based or Active testing (A safeguard can be evaluated using multiple evaluation methods). A Data-driven evaluation method indicates that we have to generate statistics from event logs, traffic flows, and user activities to evaluate the enforcement of the safeguard; A model-based evaluation approach indicates that we have to use the configuration of the system to evaluate the enforcement of the safeguard; An active testing evaluation method indicates that we have to probe the system to evaluate the enforcement of the safeguard. You must also explain why you think a safeguard can be assessed using the detected evaluation method.
+
+Measure: What is to be measured to assess the safeguard? One or multiple measures are used to generate metric.
+
+Metric: A metric for a security control safeguard defines how to assess corresponding security control safeguard. Each metric is the combination of multiple measures. We may need multiple metrics to assess multiple aspects of enforcement quality for a specific safeguard.
+
+Asset Classes can help to classify controls into different categories based on what assets they are
+protecting.}
+
+Example 1:
+
+Question: 
+For the following security control safeguard description, asset class and security function enclosed in the curly braces, extract the following information: observable, class, evaluation_method, measure and metric.
+Asset Class: {Devices}
+Security Function: {Detect}
+Safeguard: {Use a passive discovery tool to identify assets connected to the enterprise’s network. Review and use scans to update the enterprise’s asset inventory at least weekly or more frequently.}
+
+Answer: 
+Thought 1: If this safeguard is implemented, we will see the passive discovery tool’s scan result. Thus, we can measure the following things-
+Measures:
+M1 = Count of properly configured passive asset discovery tools
+M2 = Count of improperly configured passive asset discovery tools
+M3 = Count of organization’s networks that are covered by properly configured passive discovery tools
+M4 = Count of organization’s networks that are not covered by properly configured passive discovery tools
+M5 = Count of enterprise networks.
+M6 = last scan time
+M7 = 2nd last scan time
+M8 = Time when asset inventory is updated
+
+Thought 2: To assess the enforcement quality of the above-mentioned safeguard, we have to measure coverage, configuration compliance quality, scan rate and asset inventory update rate. To calculate the coverage score, you can combine measure  M3 and M4; to calculate the Configuration compliance quality, you can combine measure  M1 and M2; To calculate scan rate, we can use measure M6 and M7; To calculate Asset inventory update rate, we can use measure M8 and M6.
+
+Metrics:
+Coverage = M3 / (M3 + M4)
+Configuration compliance quality = M1/(M1 + M2) 
+Scan rate = time difference between two consecutive scan = M6 - M7
+Assent inventory update rate (freshness) =  1/ (the time when asset inventory is updated - last scan time) = 1 / (M8 - M6)
+
+Example 2:
+
+Question:
+For the following security control safeguard description, asset class and security function enclosed in the curly braces, extract the following information: observable, class, evaluation_method, measure and metric.
+Asset Class: {Users}
+Security Function: {Govern}
+Safeguard: {Centralize account management through a directory or identity service.}
+
+Answer:
+Thought 1: If this safeguard is implemented, we will observe a centralized identity service (such as Active Directory, LDAP, or a cloud-based IAM system) being used for account management. Observable elements include directory service logs, configuration settings showing account integration, and user provisioning activity routed through the central system.
+
+Measures:
+M1 = Count of user accounts managed through the centralized identity service
+M2 = Count of user accounts managed outside the centralized identity service
+M3 = Total count of user accounts in the organization
+M4 = Number of systems integrated with the centralized identity service
+M5 = Total number of systems requiring user account access
+M6 = Number of identity-related audit events indicating manual or decentralized account creation
+
+Thought 2: To assess the enforcement of this safeguard, we need to measure the proportion of accounts centrally managed, integration coverage of systems, and signs of account governance drift. Centralization quality can be derived from M1 and M2; Integration coverage can be calculated using M4 and M5; Governance drift signals can be inferred using M6.
+
+Metrics:
+Centralization Ratio = M1 / M3
+Decentralized Account Ratio = M2 / M3
+Integration Coverage = M4 / M5
+Governance Drift Indicator = Frequency of M6 events over a given time period
+
+Example 3:
+
+Question:
+For the following security control safeguard description, asset class and security function enclosed in the curly braces, extract the following information: observable, class, evaluation_method, measure and metric.
+Asset Class: {Software}
+Security Function: {Identify}
+Safeguard: {Establish and maintain an inventory of service accounts. The inventory, at a minimum, must contain department owner, review date, and purpose. Perform service account reviews to validate that all active accounts are authorized, on a recurring schedule at a minimum quarterly, or more frequently.}
+
+Answer:
+Thought 1: If this safeguard is implemented, we will observe a maintained inventory of service accounts including metadata such as department owner, review date, and purpose. Additionally, audit logs or records from service account reviews will be visible. We can also check whether service accounts in use are reflected in the inventory.
+
+Measures:
+M1 = Count of service accounts listed in the inventory
+M2 = Count of active service accounts not listed in the inventory
+M3 = Count of service accounts with complete metadata (owner, review date, purpose)
+M4 = Count of service accounts with incomplete or missing metadata
+M5 = Time of last review
+M6 = Time of previous review
+M7 = Count of unauthorized service accounts identified during review
+M8 = Count of service accounts reviewed
+M9 = Total number of active service accounts
+
+Thought 2: To assess enforcement quality, we evaluate inventory completeness, metadata completeness, review frequency, and review effectiveness. Inventory completeness can be calculated using M1 and M2; metadata completeness using M3 and M4; review frequency from M5 and M6; and review effectiveness using M7 and M8.
+
+Metrics:
+Inventory Completeness = M1 / (M1 + M2)
+Metadata Completeness = M3 / (M3 + M4)
+Review Frequency = M5 - M6
+Review Effectiveness = 1 - (M7 / M8)
+Coverage of Review = M8 / M9
+
+Example 4:
+
+Question:
+For the following security control safeguard description, asset class and security function enclosed in the curly braces, extract the following information: observable, class, evaluation_method, measure and metric.
+Asset Class: {Users}
+Security Function: {Protect}
+Safeguard: {Use unique passwords for all enterprise assets. Best practice implementation includes, at a minimum, an 8-character password for accounts using Multi-Factor Authentication (MFA) and a 14-character password for accounts not using MFA.}
+
+Answer:
+Thought 1: If this safeguard is enforced, we will observe password policies configured in identity management systems, such as minimum length and complexity settings, as well as password reuse restrictions. We will also see account configurations that either use or do not use MFA, along with password compliance records or violations from authentication logs.
+
+Measures:
+M1 = Count of accounts with unique passwords
+M2 = Count of accounts with reused or shared passwords
+M3 = Count of accounts with MFA enabled
+M4 = Count of accounts with MFA enabled and password length ≥ 8
+M5 = Count of accounts with MFA enabled and password length < 8
+M6 = Count of accounts without MFA
+M7 = Count of accounts without MFA and password length ≥ 14
+M8 = Count of accounts without MFA and password length < 14
+M9 = Total number of user accounts
+
+Thought 2: To evaluate the enforcement of this safeguard, we need to assess password uniqueness, compliance with password length policy based on MFA status, and the overall proportion of compliant accounts. Password uniqueness can be calculated using M1 and M2. MFA-based compliance can be measured separately for accounts with and without MFA (M4, M5, M7, M8).
+
+Metrics:
+Password Uniqueness Rate = M1 / (M1 + M2)
+MFA Account Compliance Rate = M4 / (M3)
+Non-MFA Account Compliance Rate = M7 / (M6)
+Overall Password Policy Compliance = (M4 + M7) / (M9)
+
+
+Example 5:
+
+Question:
+For the following security control safeguard description, asset class and security function enclosed in the curly braces, extract the following information: observable, class, evaluation_method, measure and metric.
+Asset Class: {Users}
+Security Function: {Protect}
+Safeguard: {Delete or disable any dormant accounts after a period of 45 days of inactivity, where supported.}
+
+Answer:
+Thought 1: If this safeguard is implemented, we will observe a list of user accounts along with their last login timestamps, and we will see system logs or identity management settings reflecting account disablement or deletion actions. Additionally, access control systems may log account status changes.
+
+Measures:
+M1 = Count of user accounts with last activity within the past 45 days
+M2 = Count of user accounts with last activity > 45 days ago
+M3 = Count of dormant accounts (>45 days inactive) that are disabled or deleted
+M4 = Count of dormant accounts (>45 days inactive) that are still active
+M5 = Total number of user accounts
+
+Thought 2: To assess the enforcement of the safeguard, we need to measure how effectively dormant accounts are detected and handled. A high-quality implementation would ensure all accounts with over 45 days of inactivity are disabled or deleted.
+
+Metrics:
+Dormant Account Disablement Rate = M3 / (M3 + M4)
+Dormancy Compliance Rate = (M1 + M3) / M5
+Dormant Account Detection Rate = (M2) / M5
