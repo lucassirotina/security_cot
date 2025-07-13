@@ -1,8 +1,10 @@
 import re
+import json
 import requests
 from bs4 import BeautifulSoup
 
 def parser():
+    list_of_metric_info = []
     for i in range(1,18):
         url = f"https://cas8.docs.cisecurity.org/en/latest/source/Controls{i}/#"
 
@@ -10,10 +12,12 @@ def parser():
         html_data = response.content
 
         soup = BeautifulSoup(html_data, 'html.parser')
-        j = 0
-        list_of_metric_info = []
-        out = {}
-        while True:
+        
+        ul_tag = soup.find('ul', class_ = 'current').find('li', class_= 'toctree-l1 current').find_next('ul')
+        
+        safeguards_count = len(ul_tag.find_all('li', class_ = 'toctree-l2', recursive=False))
+
+        for j in range(0, safeguards_count):
             # Measures
             if j == 0:
                 measure_header = soup.find(id = "measures")
@@ -68,13 +72,16 @@ def parser():
 
                 metric_info["measure.id"] = re.findall(r'M\d+', metric_info["equation"])
                 for measure_id in metric_info["measure.id"]:
-                    #Check if the element was already added to avoid adding the same one.
+                    # Check if the element was already added to avoid adding the same one.
                     if measures[int(measure_id[1:])-1] not in metric_info["measure.description"]:
                         metric_info["measure.description"].append(measures[int(measure_id[1:])-1])               
                         measure = metric_info["measure.description"][-1]
                         metric_info["inputs"].append(input_extractor(measure, inputs))
 
-                list_of_metric_info.append(metric_info)               
+                list_of_metric_info.append(metric_info)
+
+    with open("parsed.json", "w") as file:
+        json.dump(list_of_metric_info, file)
 
 
 def input_extractor(measure: str, inputs: list) -> list:
