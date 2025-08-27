@@ -45,9 +45,16 @@ def cot_prompt(prompt: str, question: str) -> dict:
     return json_response
 
 responses = []
-for i, safeguard in safeguards.iterrows():
-    question = questionContext + f"\n\n{{Asset Class: {safeguard["Asset Class"]}\n, Security Function: {safeguard["Asset Class"]}\n, Safeguard: {safeguard["Description"]}}}"
-    responses.append(cot_prompt(systemPrompt, question))
+i = 0
+length=len(safeguards)
+while i < length:
+    safeguard = safeguards.loc[i]
+    question = questionContext + f"\n\n{{Asset Class: {safeguard["Asset Class"]}\n, Security Function: {safeguard["Security Function"]}\n, Safeguard: {safeguard["Description"]}}}"
+    try:
+        responses.append(cot_prompt(systemPrompt, question))
+        i += 1
+    except:
+        pass
 
 with open("responses.json", "w") as file:
     json.dump(responses, file)
