@@ -1,0 +1,40 @@
+Given the context, LLM-generated and golden dataset measures and metrics for a specific safeguard enforcement quality assessment, evaluate LLM-generated response with respect to golden dataset based on the following criteria: 
+1. Semantic similarity (1-10):
+- Focus on meaning, not wording.
+- Ignore differences in metric/measure IDs (e.g., M1 vs M3) or JSON formatting.
+- Treat Metric_as_text entries and metric equations (in JSON) as equally important indicators of metric meaning.
+2. Novelity (1-10):
+- Score based on the degree to which LLM introduces new metrics not present in the golden dataset.
+3. Metrics correctness (1-10):
+- Assess whether the LLM's metrics are logically and mathematically well-formed and aligned with the safeguard requirements in the context.
+
+While scoring, ignore structural mismatches in JSON (e.g. key order, formatting). Focus only on the metric definitions, their meaning, and their correctness.
+
+Use the following description as a reference for the scoring.
+{
+  "1-2": {
+    "Semantic Similarity": "Completely unrelated to golden dataset.",
+    "Novelty": "No new metrics (identical).",
+    "Metrics Correctness": "Illogical, invalid, or contradict safeguard."
+  },
+  "3-4": {
+    "Semantic Similarity": "Very low overlap; minimal match.",
+    "Novelty": "<= 1 new metric.",
+    "Metrics Correctness": "Many metrics incorrect or weakly aligned."
+  },
+  "5-6": {
+    "Semantic Similarity": "Partial overlap; important gaps.",
+    "Novelty": "1–2 new metrics.",
+    "Metrics Correctness": "Some metrics valid, others flawed."
+  },
+  "7-8": {
+    "Semantic Similarity": "Mostly similar; small deviations.",
+    "Novelty": "2–3 new metrics.",
+    "Metrics Correctness": "Most metrics correct, minor errors."
+  },
+  "9-10": {
+    "Semantic Similarity": "Nearly identical in meaning.",
+    "Novelty": ">= 3 new metrics.",
+    "Metrics Correctness": "All metrics valid, mathematically correct, fully aligned."
+  }
+}
